@@ -23,7 +23,7 @@ Desarrollo de proyecto escolar para la gestion de eventos, con el que podras cre
 
 ### 2. Crea la base de datos
 
-Ejecutar el script `SistemaEventos_DB.sql` que estara aqui en github o drive segun donde lo estes viendo:
+Ejecutar el script `Creacion BD Seamar.sql` que estara aqui en github o drive segun donde lo estes viendo:
 
 1. Abrir el sql Express
 2. Abre el archivo o copea el contenido en un nuevo scrip
