@@ -1,0 +1,188 @@
+ <!-- La neta no jala mas que para pantalla principal, no logre que jalara la info -->
+@model IEnumerable<GestionarEventasos.Models.Evento>
+@{
+    ViewData["Title"] = "Eventos Próximos";
+    int totalEventos   = Model.Count();
+    int totalInscritos = Model.Sum(e => e.Inscripciones.Count);
+    int eventosLlenos  = Model.Count(e => e.Inscripciones.Count >= e.Cupos);
+    int eventosDisp    = totalEventos - eventosLlenos;
+}
+
+<div class="row">
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@totalEventos</h3></div>
+                    <div class="col-3">
+                        <div class="icon icon-box-success">
+                            <span class="mdi mdi-calendar-month icon-item"></span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Eventos próximos</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@totalInscritos</h3></div>
+                    <div class="col-3">
+                        <div class="icon icon-box-success">
+                            <span class="mdi mdi-account-group icon-item"></span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Total inscritos</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@eventosDisp</h3></div>
+                    <div class="col-3">
+                        <div class="icon icon-box-success">
+                            <span class="mdi mdi-check-circle icon-item"></span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Con cupos disponibles</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@eventosLlenos</h3></div>
+                    <div class="col-3">
+                        <div class="icon icon-box-danger">
+                            <span class="mdi mdi-close-circle icon-item"></span>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Eventos llenos</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Se supone filtre por fecha-->
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Filtrar por Fecha</h4>
+                <form method="get" class="row align-items-end">
+                    <div class="col-md-4 form-group">
+                        <label>Desde</label>
+                        <input type="date" name="fechaDesde" class="form-control form-control-sm"
+                               value="@ViewBag.FechaDesde" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label>Hasta</label>
+                        <input type="date" name="fechaHasta" class="form-control form-control-sm"
+                               value="@ViewBag.FechaHasta" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <button type="submit" class="btn btn-primary btn-sm mr-2">
+                            <i class="mdi mdi-filter mr-1"></i>Filtrar
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                            <i class="mdi mdi-close mr-1"></i>Limpiar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Muestre tablas de eventos -->
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title mb-0">Eventos Activos Próximos</h4>
+                    <a asp-controller="Eventos" asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="mdi mdi-plus mr-1"></i>Nuevo Evento
+                    </a>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="mdi mdi-calendar-remove" style="font-size:3rem;"></i>
+                        <p class="mt-2">No hay eventos próximos con los filtros aplicados.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th>Fecha</th>
+                                    <th>Lugar</th>
+                                    <th class="text-center">Inscritos / Cupos</th>
+                                    <th class="text-center">Ocupación</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var e in Model)
+                                {
+                                    var pct = e.Cupos > 0
+                                        ? (int)Math.Round((double)e.Inscripciones.Count / e.Cupos * 100)
+                                        : 0;
+                                    var barClass = pct >= 100 ? "bg-danger" : pct >= 75 ? "bg-warning" : "bg-success";
+                                    <tr>
+                                        <td class="font-weight-medium">@e.Nombre</td>
+                                        <td>@e.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-muted">@e.Lugar</td>
+                                        <td class="text-center">
+                                            <span class="@(e.Inscripciones.Count >= e.Cupos ? "text-danger font-weight-bold" : "text-success font-weight-bold")">
+                                                @e.Inscripciones.Count
+                                            </span>
+                                            <span class="text-muted">/ @e.Cupos</span>
+                                            @if (e.Inscripciones.Count >= e.Cupos)
+                                            {
+                                                <span class="badge badge-danger ml-1">LLENO</span>
+                                            }
+                                        </td>
+                                        <td style="width:140px">
+                                            <div class="progress progress-md">
+                                                <div class="progress-bar @barClass" style="width:@(Math.Min(pct,100))%"></div>
+                                            </div>
+                                            <small class="text-muted">@pct%</small>
+                                        </td>
+                                        <td class="text-center">
+                                            <a asp-controller="Eventos" asp-action="Details" asp-route-id="@e.IdEvento"
+                                               class="btn btn-outline-info btn-sm" title="Ver">
+                                                <i class="mdi mdi-eye"></i>
+                                            </a>
+                                            @if (e.Inscripciones.Count < e.Cupos)
+                                            {
+                                                <a asp-controller="Inscripciones" asp-action="Create"
+                                                   asp-route-eventoId="@e.IdEvento"
+                                                   class="btn btn-success btn-sm ml-1" title="Inscribir">
+                                                    <i class="mdi mdi-account-plus"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

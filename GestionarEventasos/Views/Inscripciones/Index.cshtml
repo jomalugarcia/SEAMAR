@@ -1,0 +1,88 @@
+@model IEnumerable<GestionarEventasos.Models.Inscripcione>
+@{ ViewData["Title"] = "Inscripciones"; }
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title mb-0"><i class="mdi mdi-clipboard-check mr-2"></i>Gestión de Inscripciones</h4>
+                    <a asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="mdi mdi-plus mr-1"></i>Nueva Inscripción
+                    </a>
+                </div>
+
+                <!-- Filtro por evento -->
+                <form method="get" class="row mb-3">
+                    <div class="col-md-6">
+                        @Html.DropDownList("eventoId",
+                            (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Eventos,
+                            "Todos los eventos",
+                            new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-sm mr-2">
+                            <i class="mdi mdi-filter mr-1"></i>Filtrar
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    </div>
+                </form>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="mdi mdi-clipboard-off" style="font-size:3rem;"></i>
+                        <p class="mt-2">Actualmente no existen inscripciones.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th>Participante</th>
+                                    <th>Email</th>
+                                    <th class="text-center">Fecha Inscripción</th>
+                                    <th class="text-center">SeVino</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var i in Model)
+                                {
+                                    <tr>
+                                        <td class="font-weight-medium">
+                                            <a asp-controller="Eventos" asp-action="Details"
+                                               asp-route-id="@i.EventoId"
+                                               class="text-white text-decoration-none">@i.Evento?.Nombre</a>
+                                        </td>
+                                        <td>@i.Participante?.NombreCompleto</td>
+                                        <td class="text-muted small">@i.Participante?.Email</td>
+                                        <td class="text-center small">@i.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-center">
+                                            @if (i.SeVino)
+                                            {
+                                                <span class="badge badge-outline-success">Sí</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-outline-secondary">No</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <a asp-action="Edit" asp-route-id="@i.IdInscripcion" class="btn btn-outline-warning btn-sm" title="Editar"><i class="mdi mdi-pencil"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@i.IdInscripcion" class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="mdi mdi-trash-can"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small mt-2">Total: @Model.Count() inscripción(es)</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

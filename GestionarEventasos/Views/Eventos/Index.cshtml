@@ -1,0 +1,95 @@
+@model IEnumerable<GestionarEventasos.Models.Evento>
+@{ ViewData["Title"] = "Eventos"; }
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="card-title mb-0"><i class="mdi mdi-calendar-month mr-2"></i>Gestión de Eventos</h4>
+                    <a asp-action="Create" class="btn btn-success btn-sm">
+                        <i class="mdi mdi-plus mr-1"></i>Nuevo Evento
+                    </a>
+                </div>
+
+                <form method="get" class="row mb-3">
+                    <div class="col-md-5">
+                        <input type="text" name="buscar" class="form-control form-control-sm"
+                               placeholder="Nombre o lugar..." value="@ViewBag.Buscar" />
+                    </div>
+                    <div class="col-md-3">
+                        <select name="estado" class="form-control form-control-sm">
+                            <option value="">Todos los estados</option>
+                            <option value="0" selected="@(ViewBag.EstadoFiltro == "0")">Activo</option>
+                            <option value="1" selected="@(ViewBag.EstadoFiltro == "1")">Cancelado</option>
+                            <option value="2" selected="@(ViewBag.EstadoFiltro == "2")">Finalizado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary btn-sm mr-2">
+                            <i class="mdi mdi-filter mr-1"></i>Buscar
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    </div>
+                </form>
+
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="mdi mdi-calendar-remove" style="font-size:3rem;"></i>
+                        <p class="mt-2">No se encontraron eventos.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Fecha</th>
+                                    <th>Lugar</th>
+                                    <th class="text-center">Estado</th>
+                                    <th class="text-center">Inscritos / Cupos</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var e in Model)
+                                {
+                                    var (cls, lbl) = e.Estado switch {
+                                        0 => ("badge-outline-success", "Activo"),
+                                        1 => ("badge-outline-danger", "Cancelado"),
+                                        2 => ("badge-outline-secondary", "Finalizado"),
+                                        _ => ("badge-outline-secondary", "—")
+                                    };
+                                    <tr>
+                                        <td class="font-weight-medium">@e.Nombre</td>
+                                        <td>@e.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-muted">@e.Lugar</td>
+                                        <td class="text-center"><div class="badge @cls">@lbl</div></td>
+                                        <td class="text-center">
+                                            <span class="@(e.Inscripciones.Count >= e.Cupos ? "text-danger font-weight-bold" : "text-success font-weight-bold")">
+                                                @e.Inscripciones.Count / @e.Cupos
+                                            </span>
+                                            @if (e.Inscripciones.Count >= e.Cupos)
+                                            {
+                                                <span class="badge badge-danger ml-1">LLENO</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <a asp-action="Details" asp-route-id="@e.IdEvento" class="btn btn-outline-info btn-sm" title="Ver"><i class="mdi mdi-eye"></i></a>
+                                            <a asp-action="Edit" asp-route-id="@e.IdEvento" class="btn btn-outline-warning btn-sm" title="Editar"><i class="mdi mdi-pencil"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@e.IdEvento" class="btn btn-outline-danger btn-sm" title="Eliminar"><i class="mdi mdi-trash-can"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small mt-2">Total: @Model.Count() evento(s)</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

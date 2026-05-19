@@ -1,0 +1,166 @@
+@model IEnumerable<GestionarEventasos.Models.ReporteEventoViewModel>
+@{
+    ViewData["Title"] = "Reporte de Ocupación";
+}
+
+<div class="row">
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@Model.Count()</h3></div>
+                    <div class="col-3"><div class="icon icon-box-success"><span class="mdi mdi-calendar-month icon-item"></span></div></div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Total Eventos</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@Model.Sum(e => e.Inscritos)</h3></div>
+                    <div class="col-3"><div class="icon icon-box-success"><span class="mdi mdi-account-check icon-item"></span></div></div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Total Inscritos</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@Model.Sum(e => e.Cupos)</h3></div>
+                    <div class="col-3"><div class="icon icon-box-success"><span class="mdi mdi-seat icon-item"></span></div></div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Espacios</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9"><h3 class="mb-0">@Model.Sum(e => e.Asistentes)</h3></div>
+                    <div class="col-3"><div class="icon icon-box-warning"><span class="mdi mdi-check-all icon-item"></span></div></div>
+                </div>
+                <h6 class="text-muted font-weight-normal">Total asistencia (Si vinieron)</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Filtrar por Fecha</h4>
+                <form method="get" class="row align-items-end">
+                    <div class="col-md-4 form-group">
+                        <label>Desde</label>
+                        <input type="date" name="fechaDesde" class="form-control form-control-sm"
+                               value="@ViewBag.FechaDesde" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label>Hasta</label>
+                        <input type="date" name="fechaHasta" class="form-control form-control-sm"
+                               value="@ViewBag.FechaHasta" />
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <button type="submit" class="btn btn-primary btn-sm mr-2">
+                            <i class="mdi mdi-filter mr-1"></i>Filtrar
+                        </button>
+                        <a asp-action="Reporte" class="btn btn-outline-secondary btn-sm">
+                            <i class="mdi mdi-close mr-1"></i>Limpiar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row grid-margin">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Eventos — Inscritos y Cupos</h4>
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="mdi mdi-calendar-remove" style="font-size:3rem;"></i>
+                        <p class="mt-2">No hay eventos con los filtros aplicados.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th>Fecha</th>
+                                    <th>Lugar</th>
+                                    <th class="text-center">Estado</th>
+                                    <th class="text-center">Inscritos y cupos</th>
+                                    <th class="text-center">Asistentes</th>
+                                    <th>Ocupación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var barClass = item.PorcentajeOcupacion >= 100 ? "bg-danger"
+                                    : item.PorcentajeOcupacion >= 75 ? "bg-warning" : "bg-success";
+                                    <tr>
+                                        <td class="font-weight-medium">
+                                            <a asp-controller="Eventos" asp-action="Details"
+                                               asp-route-id="@item.EventoId" class="text-white text-decoration-none">
+                                                @item.Nombre
+                                            </a>
+                                        </td>
+                                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-muted">@item.Lugar</td>
+                                        <td class="text-center">
+                                            @{
+                                                var (cls, lbl) = item.Estado switch
+                                                {
+                                                    0 => ("badge-outline-success", "Activo"),
+                                                    1 => ("badge-outline-danger", "Cancelado"),
+                                                    2 => ("badge-outline-secondary", "Finalizado"),
+                                                    _ => ("badge-outline-secondary", "—")
+                                                };
+                                            }
+                                            <div class="badge @cls">@lbl</div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="font-weight-bold @(item.Disponibles <= 0 ? "text-danger" : "text-success")">
+                                                @item.Inscritos
+                                            </span>
+                                            <span class="text-muted">/ @item.Cupos</span>
+                                            @if (item.Disponibles <= 0)
+                                            {
+                                                <span class="badge badge-danger ml-1">Lleno</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">@item.Asistentes</td>
+                                        <td style="min-width:160px">
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress progress-md flex-grow mr-2">
+                                                    <div class="progress-bar @barClass"
+                                                         style="width:@(Math.Min(item.PorcentajeOcupacion, 100))%"></div>
+                                                </div>
+                                                <small class="font-weight-bold">@item.PorcentajeOcupacion%</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small mt-2">Mostrando <strong>@Model.Count()</strong> evento(s)</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

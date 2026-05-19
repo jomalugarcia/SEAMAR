@@ -1,0 +1,78 @@
+@model GestionarEventasos.Models.Participante
+@{ ViewData["Title"] = Model.NombreCompleto; }
+
+<div class="row grid-margin">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-account mr-2"></i>Datos del Participante</h4>
+                <hr />
+                <p><strong>Nombre:</strong><br/>@Model.NombreCompleto</p>
+                <p><strong>Email:</strong><br/><span class="text-muted">@Model.Email</span></p>
+                <p><strong>Teléfono:</strong><br/>@(Model.Telefono ?? "—")</p>
+                <p><strong>Fecha de Registro:</strong><br/>@Model.FechaRegistro.ToString("dd/MM/yyyy")</p>
+                <p><strong>Inscripciones:</strong>
+                    <span class="badge badge-outline-info">@Model.Inscripciones.Count</span>
+                </p>
+                <div class="mt-3">
+                    <a asp-action="Edit" asp-route-id="@Model.IdParticipante" class="btn btn-warning btn-sm mr-2">
+                        <i class="mdi mdi-pencil mr-1"></i>Editar
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="mdi mdi-arrow-left mr-1"></i>Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-clipboard-list mr-2"></i>Inscripciones (@Model.Inscripciones.Count)</h4>
+                @if (!Model.Inscripciones.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="mdi mdi-clipboard-off" style="font-size:3rem;"></i>
+                        <p class="mt-2">No tiene inscripciones aún.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th class="text-center">Fecha Evento</th>
+                                    <th class="text-center">Inscripción</th>
+                                    <th class="text-center">SeVino</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var i in Model.Inscripciones)
+                                {
+                                    <tr>
+                                        <td>@i.Evento?.Nombre</td>
+                                        <td class="text-center small">@i.Evento?.Fecha.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center small">@i.FechaInscripcion.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center">
+                                            @if (i.SeVino)
+                                            {
+                                                <i class="mdi mdi-check-circle text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="mdi mdi-minus-circle text-muted"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

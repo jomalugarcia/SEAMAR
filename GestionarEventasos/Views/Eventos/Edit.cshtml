@@ -1,0 +1,64 @@
+@model GestionarEventasos.Models.Evento
+@{ ViewData["Title"] = "Editar Evento"; }
+
+<div class="row justify-content-center grid-margin">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-pencil mr-2"></i>Editar Evento</h4>
+                <hr />
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="IdEvento" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Nombre">Nombre del Evento</label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Fecha">Fecha y Hora</label>
+                        <input asp-for="Fecha" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="Fecha" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Lugar">Lugar</label>
+                        <input asp-for="Lugar" class="form-control" />
+                        <span asp-validation-for="Lugar" class="text-danger small"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Cupos">Espacios Máximos</label>
+                                <input asp-for="Cupos" class="form-control" type="number" min="1" />
+                                <span asp-validation-for="Cupos" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Estado">Estado</label>
+                                <select asp-for="Estado" class="form-control">
+                                    <option value="0">Activo</option>
+                                    <option value="1">Cancelado</option>
+                                    <option value="2">Finalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-warning mr-2">
+                            <i class="mdi mdi-check mr-1"></i>Guardar Cambios
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

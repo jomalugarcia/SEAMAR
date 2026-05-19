@@ -1,0 +1,109 @@
+@model GestionarEventasos.Models.Evento
+@{
+    ViewData["Title"] = Model.Nombre;
+    int pct = Model.Cupos > 0 ? (int)Math.Round((double)Model.Inscripciones.Count / Model.Cupos * 100) : 0;
+    var barClass = pct >= 100 ? "bg-danger" : pct >= 75 ? "bg-warning" : "bg-success";
+    <!-- Esta cosa es para que lo de elegir como ta el evento, para veitar fallos -->
+    var (estadoCls, estadoLbl) = Model.Estado switch {
+        0 => ("badge-outline-success", "Activo"),
+        1 => ("badge-outline-danger", "Cancelado"),
+        2 => ("badge-outline-secondary", "Finalizado"),
+        _ => ("badge-outline-secondary", "—")
+    };
+}
+
+<div class="row grid-margin">
+    <!-- Info del evento -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-information mr-2"></i>Información</h4>
+                <hr />
+                <p><strong>Nombre:</strong><br/>@Model.Nombre</p>
+                <p><strong>Fecha:</strong><br/>@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Lugar:</strong><br/>@Model.Lugar</p>
+                <p><strong>Estado:</strong> <div class="badge @estadoCls">@estadoLbl</div></p>
+                <p><strong>Cupos:</strong> @Model.Cupos</p>
+                <p><strong>Inscritos:</strong>
+                    <span class="@(Model.Inscripciones.Count >= Model.Cupos ? "text-danger font-weight-bold" : "text-success font-weight-bold")">
+                        @Model.Inscripciones.Count
+                    </span>
+                    @if (Model.Inscripciones.Count >= Model.Cupos)
+                    {
+                        <span class="badge badge-danger ml-1">LLENO</span>
+                    }
+                </p>
+                <label class="text-muted small">Ocupación (@pct%)</label>
+                <div class="progress progress-md mb-3">
+                    <div class="progress-bar @barClass" style="width:@(Math.Min(pct,100))%"></div>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <a asp-action="Edit" asp-route-id="@Model.IdEvento" class="btn btn-warning btn-sm mr-2">
+                        <i class="mdi mdi-pencil mr-1"></i>Editar
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="mdi mdi-arrow-left mr-1"></i>Volver
+                    </a>
+                </div>
+                @if (Model.Inscripciones.Count < Model.Cupos && Model.Estado == 0)
+                {
+                    <a asp-controller="Inscripciones" asp-action="Create" asp-route-eventoId="@Model.IdEvento"
+                       class="btn btn-success btn-sm w-100 mt-2">
+                        <i class="mdi mdi-account-plus mr-1"></i>Inscribir nuevo Participante
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- GEnte inscrita -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><i class="mdi mdi-account-group mr-2"></i>Participantes Inscritos (@Model.Inscripciones.Count)</h4>
+                @if (!Model.Inscripciones.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="mdi mdi-account-off" style="font-size:3rem;"></i>
+                        <p class="mt-2">Aún no hay participantes inscritos.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Participante</th>
+                                    <th>Email</th>
+                                    <th class="text-center">Fecha Inscripción</th>
+                                    <th class="text-center">SeVino</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var i in Model.Inscripciones)
+                                {
+                                    <tr>
+                                        <td>@i.Participante?.NombreCompleto</td>
+                                        <td class="text-muted small">@i.Participante?.Email</td>
+                                        <td class="text-center small">@i.FechaInscripcion.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center">
+                                            @if (i.SeVino)
+                                            {
+                                                <i class="mdi mdi-check-circle text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="mdi mdi-minus-circle text-muted"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

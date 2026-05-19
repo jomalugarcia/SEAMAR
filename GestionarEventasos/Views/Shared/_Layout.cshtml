@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - SEAMAR</title>
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="~/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="~/vendors/css/vendor.bundle.base.css" />
+
+    <!-- Corona Admin style principal -->
+    <link rel="stylesheet" href="~/css/style.css" />
+
+    <link rel="shortcut icon" href="~/images/favicon.png" />
+</head>
+<body>
+    <div class="container-scroller">
+
+        <!-- Venia con barra laterar -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+                <a class="sidebar-brand brand-logo" asp-controller="Home" asp-action="Index">
+                    <span style="color:#fff;font-size:1.3rem;font-weight:700;letter-spacing:1px;">
+                        <i class="mdi mdi-school mr-2"></i>SEAMAR
+                    </span>
+                </a>
+                <a class="sidebar-brand brand-logo-mini" asp-controller="Home" asp-action="Index">
+                    <span style="color:#fff;font-weight:700;font-size:1.1rem;">SE</span>
+                </a>
+            </div>
+
+            <ul class="nav">
+                <!-- Se mra cool -->
+                <li class="nav-item profile">
+                    <div class="profile-desc">
+                        <div class="profile-pic">
+                            <div class="count-indicator">
+                                <div class="preview-icon bg-success rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width:36px;height:36px;">
+                                    <i class="mdi mdi-calendar-star text-white" style="font-size:18px;"></i>
+                                </div>
+                                <span class="count bg-success"></span>
+                            </div>
+                            <div class="profile-name">
+                                <h5 class="mb-0 font-weight-normal">SEAMAR</h5>
+                                <span>Gestión de Eventos</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item nav-category">
+                    <span class="nav-link">Menú Principal</span>
+                </li>
+
+                <!-- Principal Main -->
+                <li class="nav-item menu-items">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <span class="menu-icon"><i class="mdi mdi-speedometer"></i></span>
+                        <span class="menu-title">Inicio</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="nav-item menu-items">
+                    <a class="nav-link" data-toggle="collapse" href="#nav-eventos"
+                       aria-expanded="false" aria-controls="nav-eventos">
+                        <span class="menu-icon"><i class="mdi mdi-calendar-month"></i></span>
+                        <span class="menu-title">Eventos</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="nav-eventos">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Eventos" asp-action="Index">
+                                    <i class="mdi mdi-format-list-bulleted mr-1"></i> Ver Todos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Eventos" asp-action="Create">
+                                    <i class="mdi mdi-plus-circle mr-1"></i> Nuevo Evento
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Participantes -->
+                <li class="nav-item menu-items">
+                    <a class="nav-link" data-toggle="collapse" href="#nav-participantes"
+                       aria-expanded="false" aria-controls="nav-participantes">
+                        <span class="menu-icon"><i class="mdi mdi-account-group"></i></span>
+                        <span class="menu-title">Participantes</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="nav-participantes">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Participantes" asp-action="Index">
+                                    <i class="mdi mdi-format-list-bulleted mr-1"></i> Ver Todos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Participantes" asp-action="Create">
+                                    <i class="mdi mdi-account-plus mr-1"></i> Nuevo Participante
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Inscripciones  -->
+                <li class="nav-item menu-items">
+                    <a class="nav-link" data-toggle="collapse" href="#nav-inscripciones"
+                       aria-expanded="false" aria-controls="nav-inscripciones">
+                        <span class="menu-icon"><i class="mdi mdi-clipboard-check"></i></span>
+                        <span class="menu-title">Inscripciones</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="nav-inscripciones">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Inscripciones" asp-action="Index">
+                                    <i class="mdi mdi-format-list-bulleted mr-1"></i> Ver Todas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Inscripciones" asp-action="Create">
+                                    <i class="mdi mdi-plus-circle mr-1"></i> Nueva Inscripción
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Espacio para reporte -->
+                <li class="nav-item nav-category">
+                    <span class="nav-link">Reportes</span>
+                </li>
+
+                <!-- Reportaso, este si jala -->
+                <li class="nav-item menu-items">
+                    <a class="nav-link" asp-controller="Home" asp-action="Reporte">
+                        <span class="menu-icon"><i class="mdi mdi-chart-bar"></i></span>
+                        <span class="menu-title">Ocupación de Eventos</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+      
+
+        <div class="container-fluid page-body-wrapper">
+
+            
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+                    <a class="navbar-brand brand-logo-mini" asp-controller="Home" asp-action="Index">
+                        <span style="color:#fff;font-weight:700;">SE</span>
+                    </a>
+                </div>
+
+                <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                    
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+
+                    
+                    <ul class="navbar-nav w-100">
+                        <li class="nav-item w-100 d-flex align-items-center">
+                            <span class="text-white font-weight-medium" style="font-size:1rem;">
+                                @(ViewData["Title"]?.ToString() ?? "SEAMAR")
+                            </span>
+                        </li>
+                    </ul>
+
+                   
+                    <ul class="navbar-nav navbar-nav-right">
+                        
+                        
+                        <li class="nav-item d-none d-lg-flex">
+                            <a class="nav-link btn btn-success create-new-button"
+                               asp-controller="Eventos" asp-action="Create">
+                                + Nuevo Eventos
+                            </a>
+                        </li>
+                        <li class="nav-item nav-settings d-none d-lg-block">
+                            <a class="nav-link" asp-controller="Home" asp-action="Reporte" title="Reporte">
+                                <i class="mdi mdi-chart-bar"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+                            type="button" data-toggle="offcanvas">
+                        <span class="mdi mdi-format-line-spacing"></span>
+                    </button>
+                </div>
+            </nav>
+          
+
+           
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <!-- Alertas globales (TempData) -->
+                    @if (TempData["Exito"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="mdi mdi-check-circle mr-2"></i>@TempData["Exito"]
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="mdi mdi-alert mr-2"></i>@TempData["Error"]
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    }
+
+                    @RenderBody()
+
+                </div>
+                
+
+                <!-- FOOTER -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
+                            <i class="mdi mdi-school mr-1"></i>
+                            SEAMAR — Sistema de Gestión de Eventos Académicos &copy; 2026
+                        </span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted small">
+                            ASP.NET Core MVC | Entity Framework Core 9 | SQL Server | Joel y Nestor
+                        </span>
+                    </div>
+                </footer>
+            </div>
+            <!-- /main-panel -->
+
+        </div>
+        <!-- /page-body-wrapper -->
+    </div>
+    <!-- /container-scroller -->
+
+    <!-- ===================== SCRIPTS ===================== -->
+    <!-- Vendor bundle -->
+    <script src="~/vendors/js/vendor.bundle.base.js"></script>
+
+    <!-- Scripts Corona -->
+    <script src="~/js/off-canvas.js"></script>
+    <script src="~/js/hoverable-collapse.js"></script>
+    <script src="~/js/misc.js"></script>
+    <script src="~/js/settings.js"></script>
+
+    <!-- jQuery Validation Razor -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
